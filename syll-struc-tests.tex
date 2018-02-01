@@ -1,0 +1,16 @@
+\documentclass{article}
+\usepackage[xslot]{syllable-struc-forest}
+\usepackage{fontspec}
+\newfontfamily\ipafont[Scale=MatchLowercase]{Charis SIL}
+\newfontfamily\junicode[Ligatures=Common]{Junicode}
+\def\useTIPAfont{\ipafont}
+\newenvironment{ipa}{%
+\ipafont}{\normalfont}
+\DeclareTextFontCommand{\textipa}{\ipafont}
+\DeclareTextFontCommand{\textIPA}{\ipafont}
+
+\begin{document}
+\V{a}
+\VC{ɬ}{b}
+\CVC{ɬ}{ɤ}{ɦ}
+\end{document}

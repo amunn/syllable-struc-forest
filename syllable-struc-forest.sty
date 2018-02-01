@@ -1,0 +1,67 @@
+\ProvidesPackage{syllable-struc-forest}[2017/08/21 Pre-built syllables using forest]
+\RequirePackage{forest}
+\useforestlibrary{linguistics}
+\newif\ifxslot\xslotfalse
+\DeclareOption{xslot}{\xslottrue}
+\ProcessOptions
+
+\ifxslot\newcommand{\Cslot}{$\times$}\newcommand{\Vslot}{$\times$}\else%
+\newcommand{\Cslot}{C}\newcommand{\Vslot}{V}\fi
+
+\forestset{ipa/.style={delay={where tier={seg}{content=\textipa{##1},l=1ex}{}}}}
+
+\newcommand{\V}[1]{%
+\begin{forest}sn edges,ipa
+ [$\sigma$ [R [N [\Vslot,tier=x[#1,tier=seg]] ]]]
+\end{forest}
+}
+
+\newcommand{\CV}[2]{%
+\begin{forest}sn edges,ipa
+ [$\sigma$ [ [O [\Cslot,tier=x[#1,tier=seg]] ]] [R [N [\Vslot,tier=x[#2,tier=seg]] ]]]
+\end{forest}
+}
+
+\newcommand{\VC}[2]{%
+\begin{forest}sn edges,ipa
+ [$\sigma$  [R [N [\Vslot,tier=x[#1,tier=seg]] ] [C [\Cslot,tier=x[#2,tier=seg]] ]]]
+\end{forest}
+}
+
+
+\newcommand{\CVC}[3]{%
+\begin{forest}sn edges,ipa
+ [$\sigma$ [O [\Cslot,tier=x[#1,tier=seg]]] [R [N [\Vslot,tier=x[#2,tier=seg]] ] [C [\Cslot,tier=x[#3,tier=seg]] ]]]
+\end{forest}
+}
+
+\newcommand{\CCV}[3]{%
+\begin{forest}sn edges,ipa
+ [$\sigma$ [ [O [\Cslot,tier=x[#1,tier=seg]] [\Cslot,tier=x[#2,tier=seg]] ]] [R [N [\Vslot,tier=x[#3,tier=seg]] ]]]
+\end{forest}
+}
+
+\newcommand{\VCC}[3]{%
+\begin{forest}sn edges,ipa
+ [$\sigma$  [R [N [\Vslot,tier=x[#1,tier=seg]] ] [C [\Cslot,tier=x[#2,tier=seg]] [\Cslot,tier=x[#3,tier=seg]] ]]]
+\end{forest}
+}
+
+\newcommand{\CCVC}[4]{%
+\begin{forest}sn edges,ipa
+ [$\sigma$ [ [O [\Cslot,tier=x[#1,tier=seg]] [\Cslot,tier=x[#2,tier=seg]] ]] [R [N [\Vslot,tier=x[#3,tier=seg]] ] [C [\Cslot,tier=x[#4,tier=seg]] ]]]
+\end{forest}
+}
+
+\newcommand{\CVCC}[4]{%
+\begin{forest}sn edges,ipa
+ [$\sigma$ [ [O [\Cslot,tier=x[#1,tier=seg]] ]] [R [N [\Vslot,tier=x[#2,tier=seg]] ] [C [\Cslot,tier=x[#3,tier=seg]] [\Cslot,tier=x[#4,tier=seg]] ]]]
+\end{forest}
+}
+
+\newcommand{\CCVCC}[5]{%
+\begin{forest}sn edges,ipa
+ [$\sigma$ [ [O [\Cslot,tier=x[#1,tier=seg]] [\Cslot,tier=x[#2,tier=seg]] ]] [R [N [\Vslot,tier=x[#3,tier=seg]] ] [C [\Cslot,tier=x[#4,tier=seg]] [\Cslot,tier=x[#5,tier=seg]] ]]]
+\end{forest}
+}
+\endinput
