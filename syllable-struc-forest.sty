@@ -38,9 +38,9 @@
 \fi
 \ifxetexorluatex
 	\RequirePackage{fontspec}
-	 \newfontfamily\@syllablefont[Scale=MatchLowercase]{Linux Libertine O}
+	 \newfontfamily\@syllablefont[Scale=MatchLowercase]{LinLibertine_R.otf}
 	 \DeclareTextFontCommand{\textsyll}{\@syllablefont}
-	 \newcommand*\setIPAfont[1]{\let\syllfont=#1}
+	 \newcommand*\setIPAfont[1]{\let\@syllablefont=#1}
 	 \AtBeginDocument{
 	 	\@ifpackageloaded{tipa}
 	{\PackageError{syllable-struc-forest}{Please do not use the tipa package with XeLaTeX or LuaLaTeX.}{Define an IPA font using fontspec}}}
@@ -56,11 +56,11 @@
 \ifxslot\newcommand{\Cslot}{$\times$}\newcommand{\Vslot}{$\times$}\else%
 \newcommand{\Cslot}{C}\newcommand{\Vslot}{V}\fi
 
-\forestset{ipa/.style={sn edges,delay={where tier={seg}{content=\textsyll{##1},l=1ex}{}}}}
+\forestset{ipa/.style={sn edges,delay={where tier={seg}{content=\textsyll{##1}}{}}}}
 
 \newcommand{\V}[1]{%
-\begin{forest},ipa
-[$\sigma$ 
+\begin{forest}
+[$\sigma$,ipa,
  	[R [N [\Vslot,tier=x[#1,tier=seg]]]]
 ]
 \end{forest}
