@@ -1,0 +1,123 @@
+% !TEX TS-program = pdflatexmk
+
+\documentclass[11pt]{article}
+\usepackage{syllable-struc-forest}
+\def\syllableversion{1.0}
+\def\syllabledate{2018/09/13}
+\title{\textbf{Using the  syllable-struc-forest package}}
+\author{\textbf{Alan Munn}\\Department of Linguistics and Languages\\\texttt{\href{mailto:amunn@msu.edu}{amunn@msu.edu}}}
+\date{Version \syllableversion\\\syllabledate}
+\usepackage[T1]{fontenc}
+\usepackage[lmargin=.75in,rmargin=.75in,tmargin=1in,bmargin=1in]{geometry}
+\usepackage{titling}
+\usepackage{array, booktabs, multicol, fancyhdr, xspace,tabularx}
+\usepackage{enumitem}
+\usepackage{fancyvrb,listings,url}
+\usepackage[sf]{titlesec}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage{capt-of}
+
+
+
+\DefineShortVerb{\|}
+\newcommand*\bs{\textbackslash}
+
+
+\IfFileExists{luximono.sty}%
+{%
+  \usepackage[scaled]{luximono}%
+}
+{%
+  \IfFileExists{beramono.sty}%
+  {%
+    \usepackage[scaled]{beramono}%
+  }{}
+}
+
+  
+\lstset{%
+    basicstyle=\ttfamily\small,
+    commentstyle=\itshape\ttfamily\small,
+    showspaces=false,
+    showstringspaces=false,
+    breaklines=true,
+    breakautoindent=true,
+    frame=single
+    captionpos=t
+    language=TeX
+}
+  
+\newcommand*{\pkg}[1]{\texttt{#1}\xspace}
+%\setitemize[1]{label={}}
+%\setitemize[2]{label={}}
+%\setdescription{font={\normalfont}}
+\setlength{\droptitle}{-1in}
+
+\lhead{}
+\chead{}
+\rhead{}
+\lfoot{\emph{}}
+\cfoot{\thepage}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\pagestyle{fancy}
+
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\renewcommand{\abstractname}{\sffamily Abstract}
+\abstract{\noindent\begin{quote} This is a package that allows you to draw syllable trees quickly with a simple input.\end{quote}
+\section{Package options}The package has one option: |[xslot]| which displays timing units as $\times$. If this option is not specified, segments are dominated simply by C or V as appropriate.
+\section{Package commands}
+\subsection{Syllable commands}
+The package provides commands for the  range of syllables shown in Table~\ref{syllables}:  The commands are straightforward: each macro consists simply of the CV specification of the syllable, and takes as many arguments as slots in that syllables.
+
+\begin{center}
+\captionof{table}{Package syllable commands}\label{syllables}
+\medskip
+\begin{tabular}{lc}
+\toprule
+\multicolumn{1}{c}{Example Command} & Number of arguments \\
+\midrule
+|\V{a}| & 1\\
+|\CV{b}{a}| & 2\\
+|\VC{a}{b}| & 2\\
+|\CVC{k}{a}{v}| & 3\\
+|\CCV{s}{t}{a}| & 3\\
+|\VCC{a}{l}{p}| & 3\\
+|\CCVC{s}{t}{a}{l}| & 4\\
+|\CVCC{s}{a}{l}{t}| & 4\\
+|\CCCV{s}{t}{r}{i}| & 4\\
+|\CCVCC{s}{l}{a}{r}{p}| & 5\\
+|\CCCVC{s}{t}{r}{i}{k}| & 5\\
+|\CCCVCC{s}{t}{r}{i}{l}{k}| & 6\\
+|\CCCVCCC{s}{t}{r}{i}{l}{k}{s}| & 7\\
+\bottomrule
+\end{tabular}
+\end{center}
+\section{IPA Fonts}
+When used with pdfLaTeX, the \pkg{tipa} package is automatically loaded, and segments are rendered in TIPA automatically.
+
+When used with XeLaTeX or LuaLaTeX, Linux Libertine O is loaded as the default IPA font. If you are using another font for your IPA symbols, define the font using \pkg{fontspec}.  For example if you are using Doulos IPA as your IPA font, you would use  |\newfontfamily\myipafont{Doulos SIL}|) and then use the following command to set the font used in the syllables: |\setIPAfont{\myipafont}|.
+
+\section{Examples}
+\V{a}
+\CV{b}{a}
+\VC{a}{b}
+\CVC{k}{a}{v}
+\CCV{s}{t}{a}
+\VCC{a}{l}{p}
+\CCVC{s}{t}{a}{l}
+\CVCC{s}{a}{l}{t}
+\CCVCC{s}{l}{a}{r}{p}
+\CCCV{s}{t}{r}{i}
+\CCCVC{s}{t}{r}{i}{k}
+
+\CCCVCC{s}{t}{r}{i}{l}{k}
+\CCCVCCC{s}{t}{r}{i}{l}{k}{s}
+\section{Limitations}
+The package currently has no way of representing more than one vowel slot, and therefore cannot represent vowel length with two timing slots. Similarly it is not designed to represent, e.g. geminate consonants with a shared segment linked to two slots.  This would require much more work than I have time and interest for.
+
+\end{document}

@@ -1,6 +1,54 @@
-\ProvidesPackage{syllable-struc-forest}[2017/08/21 Pre-built syllables using forest]
+% syllable-struc-forest package
+% Copyright 2018 by Alan Munn <amunn@msu.edu>
+%
+% This class may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or any later version.
+% The latest version of this license is in
+%   http://www.latex-project.org/lppl.txt
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% This package has the LPPL maintenance status `maintained'.
+% 
+% The Current Maintainer of this package is Alan Munn.
+%
+%
+% This package consists of the following source file:  
+% 	syllable-struc-forest.sty 
+% Documentation files:
+%   syllable-struc-forest.tex and syllable-struc-forest.pdf; 
+%
+% Version 1.0 2018/09/13
+%
+\def\@syllableversion{1.0}
+\ProvidesPackage{syllable-struc-forest}[2018/09/13 Pre-built syllables using forest v\@syllableversion]
 \RequirePackage{forest}
 \useforestlibrary{linguistics}
+\RequirePackage{ifxetex,ifluatex}
+\newif\ifxetexorluatex
+\ifxetex
+  \xetexorluatextrue
+\else
+  \ifluatex
+    \xetexorluatextrue
+  \else
+    \xetexorluatexfalse
+  \fi
+\fi
+\ifxetexorluatex
+	\RequirePackage{fontspec}
+	 \newfontfamily\@syllablefont[Scale=MatchLowercase]{Linux Libertine O}
+	 \DeclareTextFontCommand{\textsyll}{\@syllablefont}
+	 \newcommand*\setIPAfont[1]{\let\syllfont=#1}
+	 \AtBeginDocument{
+	 	\@ifpackageloaded{tipa}
+	{\PackageError{syllable-struc-forest}{Please do not use the tipa package with XeLaTeX or LuaLaTeX.}{Define an IPA font using fontspec}}}
+\else
+    \RequirePackage{tipa}
+    \let\textsyll\textipa
+\fi
+
 \newif\ifxslot\xslotfalse
 \DeclareOption{xslot}{\xslottrue}
 \ProcessOptions
@@ -8,60 +56,172 @@
 \ifxslot\newcommand{\Cslot}{$\times$}\newcommand{\Vslot}{$\times$}\else%
 \newcommand{\Cslot}{C}\newcommand{\Vslot}{V}\fi
 
-\forestset{ipa/.style={delay={where tier={seg}{content=\textipa{##1},l=1ex}{}}}}
+\forestset{ipa/.style={sn edges,delay={where tier={seg}{content=\textsyll{##1},l=1ex}{}}}}
 
 \newcommand{\V}[1]{%
-\begin{forest}sn edges,ipa
- [$\sigma$ [R [N [\Vslot,tier=x[#1,tier=seg]] ]]]
+\begin{forest},ipa
+[$\sigma$ 
+ 	[R [N [\Vslot,tier=x[#1,tier=seg]]]]
+]
 \end{forest}
 }
 
 \newcommand{\CV}[2]{%
-\begin{forest}sn edges,ipa
- [$\sigma$ [ [O [\Cslot,tier=x[#1,tier=seg]] ]] [R [N [\Vslot,tier=x[#2,tier=seg]] ]]]
+\begin{forest},ipa
+[$\sigma$ 
+	[O [\Cslot,tier=x[#1,tier=seg]]] 
+	[R [N [\Vslot,tier=x[#2,tier=seg]]]]
+]
 \end{forest}
 }
 
 \newcommand{\VC}[2]{%
-\begin{forest}sn edges,ipa
- [$\sigma$  [R [N [\Vslot,tier=x[#1,tier=seg]] ] [C [\Cslot,tier=x[#2,tier=seg]] ]]]
+\begin{forest},ipa
+[$\sigma$  
+	[R 
+		[N [\Vslot,tier=x[#1,tier=seg]]] 
+		[C [\Cslot,tier=x[#2,tier=seg]]]
+	]
+]
 \end{forest}
 }
 
 
 \newcommand{\CVC}[3]{%
-\begin{forest}sn edges,ipa
- [$\sigma$ [O [\Cslot,tier=x[#1,tier=seg]]] [R [N [\Vslot,tier=x[#2,tier=seg]] ] [C [\Cslot,tier=x[#3,tier=seg]] ]]]
+\begin{forest},ipa
+[$\sigma$ 
+	[O [\Cslot,tier=x[#1,tier=seg]]] 
+	[R 
+		[N [\Vslot,tier=x[#2,tier=seg]]] 
+		[C [\Cslot,tier=x[#3,tier=seg]]]
+	]
+]
 \end{forest}
 }
 
 \newcommand{\CCV}[3]{%
-\begin{forest}sn edges,ipa
- [$\sigma$ [ [O [\Cslot,tier=x[#1,tier=seg]] [\Cslot,tier=x[#2,tier=seg]] ]] [R [N [\Vslot,tier=x[#3,tier=seg]] ]]]
+\begin{forest},ipa
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#1,tier=seg]] 
+		[\Cslot,tier=x[#2,tier=seg]]
+	] 
+	[R [N [\Vslot,tier=x[#3,tier=seg]]]]
+]
 \end{forest}
 }
 
 \newcommand{\VCC}[3]{%
-\begin{forest}sn edges,ipa
- [$\sigma$  [R [N [\Vslot,tier=x[#1,tier=seg]] ] [C [\Cslot,tier=x[#2,tier=seg]] [\Cslot,tier=x[#3,tier=seg]] ]]]
+\begin{forest},ipa
+[$\sigma$  
+	[R 	[N [\Vslot,tier=x[#1,tier=seg]]] 
+		[C	[\Cslot,tier=x[#2,tier=seg]] 
+			[\Cslot,tier=x[#3,tier=seg]]
+		]
+	]
+]
 \end{forest}
 }
 
 \newcommand{\CCVC}[4]{%
-\begin{forest}sn edges,ipa
- [$\sigma$ [ [O [\Cslot,tier=x[#1,tier=seg]] [\Cslot,tier=x[#2,tier=seg]] ]] [R [N [\Vslot,tier=x[#3,tier=seg]] ] [C [\Cslot,tier=x[#4,tier=seg]] ]]]
+\begin{forest},ipa
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#1,tier=seg]] 
+		[\Cslot,tier=x[#2,tier=seg]]
+	]
+	[R 
+		[N [\Vslot,tier=x[#3,tier=seg]]] 
+		[C [\Cslot,tier=x[#4,tier=seg]]]
+	]
+]
 \end{forest}
 }
 
 \newcommand{\CVCC}[4]{%
-\begin{forest}sn edges,ipa
- [$\sigma$ [ [O [\Cslot,tier=x[#1,tier=seg]] ]] [R [N [\Vslot,tier=x[#2,tier=seg]] ] [C [\Cslot,tier=x[#3,tier=seg]] [\Cslot,tier=x[#4,tier=seg]] ]]]
+\begin{forest},ipa
+[$\sigma$ 
+	[O [\Cslot,tier=x[#1,tier=seg]]] 
+	[R	[N [\Vslot,tier=x[#2,tier=seg]] ] 
+		[C	[\Cslot,tier=x[#3,tier=seg]] 
+			[\Cslot,tier=x[#4,tier=seg]]
+		]
+	]
+]
 \end{forest}
 }
 
 \newcommand{\CCVCC}[5]{%
-\begin{forest}sn edges,ipa
- [$\sigma$ [ [O [\Cslot,tier=x[#1,tier=seg]] [\Cslot,tier=x[#2,tier=seg]] ]] [R [N [\Vslot,tier=x[#3,tier=seg]] ] [C [\Cslot,tier=x[#4,tier=seg]] [\Cslot,tier=x[#5,tier=seg]] ]]]
+\begin{forest},ipa
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#1,tier=seg]]
+		[\Cslot,tier=x[#2,tier=seg]]
+	] 
+	[R	[N [\Vslot,tier=x[#3,tier=seg]] ] 
+		[C	[\Cslot,tier=x[#4,tier=seg]]
+			[\Cslot,tier=x[#5,tier=seg]]
+		]
+	]
+]
 \end{forest}
 }
+\newcommand{\CCCV}[4]{%
+\begin{forest},ipa
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#1,tier=seg]] 
+		[\Cslot,tier=x[#2,tier=seg]]
+		[\Cslot,tier=x[#3,tier=seg]]
+	] 
+	[R [N [\Vslot,tier=x[#4,tier=seg]]]]
+]
+\end{forest}
+}
+\newcommand{\CCCVC}[5]{%
+\begin{forest},ipa
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#1,tier=seg]] 
+		[\Cslot,tier=x[#2,tier=seg]]
+		[\Cslot,tier=x[#3,tier=seg]]
+	]
+	[R 
+		[N [\Vslot,tier=x[#4,tier=seg]]] 
+		[C	[\Cslot,tier=x[#5,tier=seg]]
+		]
+	]
+]
+\end{forest}
+}
+\newcommand{\CCCVCC}[6]{%
+\begin{forest},ipa
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#1,tier=seg]] 
+		[\Cslot,tier=x[#2,tier=seg]]
+		[\Cslot,tier=x[#3,tier=seg]]
+	]
+	[R 
+		[N [\Vslot,tier=x[#4,tier=seg]]] 
+		[C	[\Cslot,tier=x[#5,tier=seg]]
+			[\Cslot,tier=x[#6,tier=seg]]
+		]
+	]
+]
+\end{forest}
+}
+\newcommand{\CCCVCCC}[7]{%
+\begin{forest},ipa
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#1,tier=seg]] 
+		[\Cslot,tier=x[#2,tier=seg]]
+		[\Cslot,tier=x[#3,tier=seg]]
+	]
+	[R 
+		[N [\Vslot,tier=x[#4,tier=seg]]] 
+		[C	[\Cslot,tier=x[#5,tier=seg]]
+			[\Cslot,tier=x[#6,tier=seg]]
+			[\Cslot,tier=x[#7,tier=seg]]
+		]
+	]
+]
+\end{forest}
+}
+
+
 \endinput
