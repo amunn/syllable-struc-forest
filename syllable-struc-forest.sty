@@ -19,13 +19,16 @@
 % Documentation files:
 %   syllable-struc-forest.tex and syllable-struc-forest.pdf; 
 %
-% Version 1.0 2018/09/13
+% Version 1.0 2018/09/13 	Initial release
+% Version 1.1 2018/09/15 	Provided support for long vowels;
+%							Added optional argument for forest options
 %
-\def\@syllableversion{1.0}
+\def\@syllableversion{1.1}
 \ProvidesPackage{syllable-struc-forest}[2018/09/13 Pre-built syllables using forest v\@syllableversion]
 \RequirePackage{forest}
 \useforestlibrary{linguistics}
 \RequirePackage{ifxetex,ifluatex}
+\RequirePackage{etoolbox}
 \newif\ifxetexorluatex
 \ifxetex
   \xetexorluatextrue
@@ -55,42 +58,91 @@
 
 \ifxslot\newcommand{\Cslot}{$\times$}\newcommand{\Vslot}{$\times$}\else%
 \newcommand{\Cslot}{C}\newcommand{\Vslot}{V}\fi
+\newlength{\longVlen}
+\setlength{\longVlen}{-5pt}
+\forestset{%
+ipa/.style={sn edges,
+	delay={where tier={seg}{content=\textsyll{##1}}{}}},
+long/.style={s sep=\longVlen,before typesetting nodes={
+	 prepend={[\Vslot,name=X1,tier=x,sn edges,]},
+	 append={[\Vslot,name=X2,tier=x,sn edges,]}}}
+}
+\newcommand{\@longV}{%
+	\draw (V.north) -- (X1.south);
+	\draw (V.north) -- (X2.south);}
 
-\forestset{ipa/.style={sn edges,delay={where tier={seg}{content=\textsyll{##1}}{}}}}
-
-\newcommand{\V}[1]{%
+\newcommand{\V}[2][]{%
 \begin{forest}
-[$\sigma$,ipa,
- 	[R [N [\Vslot,tier=x[#1,tier=seg]]]]
+[$\sigma$,ipa,#1
+ 	[R [N [\Vslot,tier=x[#2,tier=seg]]]]
 ]
 \end{forest}
 }
 
-\newcommand{\CV}[2]{%
-\begin{forest},ipa
-[$\sigma$ 
-	[O [\Cslot,tier=x[#1,tier=seg]]] 
-	[R [N [\Vslot,tier=x[#2,tier=seg]]]]
+\newcommand{\VV}[3][]{%
+\ifstrequal{#2}{#3}
+{%
+\begin{forest}
+[$\sigma$,ipa,#1
+ 	[R	[N, long 
+			[\Vslot,phantom,tier=x[#2,tier=seg,name=V]]
+		]
+	]
 ]
+\@longV
 \end{forest}
 }
-
-\newcommand{\VC}[2]{%
-\begin{forest},ipa
-[$\sigma$  
-	[R 
-		[N [\Vslot,tier=x[#1,tier=seg]]] 
-		[C [\Cslot,tier=x[#2,tier=seg]]]
+{%
+\begin{forest}
+[$\sigma$,ipa,#1
+ 	[R	[N 
+			[\Vslot,tier=x[#2,tier=seg]]
+			[\Vslot,tier=x[#3,tier=seg]]
+		]
 	]
 ]
 \end{forest}
 }
+}
 
-
-\newcommand{\CVC}[3]{%
+\newcommand{\CV}[3][]{%
 \begin{forest},ipa
 [$\sigma$ 
-	[O [\Cslot,tier=x[#1,tier=seg]]] 
+	[O [\Cslot,tier=x[#2,tier=seg]]] 
+	[R [N [\Vslot,tier=x[#3,tier=seg]]]]
+]
+\end{forest}
+}
+\newcommand{\CVV}[4][]{%
+\ifstrequal{#3}{#4}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O [\Cslot,tier=x[#2,tier=seg]]] 
+	[R	[N, long 
+			[\Vslot,phantom,tier=x[#3,tier=seg,name=V]]
+		]
+	]
+]
+\@longV
+\end{forest}
+}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O [\Cslot,tier=x[#2,tier=seg]]] 
+	[R [N [\Vslot,tier=x[#3,tier=seg]]
+		  [\Vslot,tier=x[#4,tier=seg]]
+	]]
+]
+\end{forest}
+}
+}
+
+
+\newcommand{\VC}[3][]{%
+\begin{forest},ipa,#1
+[$\sigma$  
 	[R 
 		[N [\Vslot,tier=x[#2,tier=seg]]] 
 		[C [\Cslot,tier=x[#3,tier=seg]]]
@@ -99,35 +151,36 @@
 \end{forest}
 }
 
-\newcommand{\CCV}[3]{%
-\begin{forest},ipa
-[$\sigma$ 
-	[O	[\Cslot,tier=x[#1,tier=seg]] 
-		[\Cslot,tier=x[#2,tier=seg]]
-	] 
-	[R [N [\Vslot,tier=x[#3,tier=seg]]]]
-]
-\end{forest}
-}
-
-\newcommand{\VCC}[3]{%
-\begin{forest},ipa
+\newcommand{\VVC}[4][]{%
+\ifstrequal{#2}{#3}
+{%
+\begin{forest},ipa,#1
 [$\sigma$  
-	[R 	[N [\Vslot,tier=x[#1,tier=seg]]] 
-		[C	[\Cslot,tier=x[#2,tier=seg]] 
-			[\Cslot,tier=x[#3,tier=seg]]
-		]
+	[R 
+		[N, long [\Vslot,phantom,tier=x[#2,tier=seg,name=V]]]
+		[C [\Cslot,tier=x[#4,tier=seg]]]
+	]
+]
+\@longV
+\end{forest}
+}
+{%
+\begin{forest},ipa,#1
+[$\sigma$  
+	[R 
+		[N 	[\Vslot,tier=x[#2,tier=seg]]
+			[\Vslot,tier=x[#3,tier=seg]]] 
+		[C [\Cslot,tier=x[#4,tier=seg]]]
 	]
 ]
 \end{forest}
 }
+}
 
-\newcommand{\CCVC}[4]{%
-\begin{forest},ipa
+\newcommand{\CVC}[4][]{%
+\begin{forest},ipa,#1
 [$\sigma$ 
- 	[O	[\Cslot,tier=x[#1,tier=seg]] 
-		[\Cslot,tier=x[#2,tier=seg]]
-	]
+	[O [\Cslot,tier=x[#2,tier=seg]]] 
 	[R 
 		[N [\Vslot,tier=x[#3,tier=seg]]] 
 		[C [\Cslot,tier=x[#4,tier=seg]]]
@@ -136,11 +189,77 @@
 \end{forest}
 }
 
-\newcommand{\CVCC}[4]{%
-\begin{forest},ipa
+\newcommand{\CVVC}[5][]{%
+\ifstrequal{#3}{#4}
+{%
+\begin{forest},ipa,#1
 [$\sigma$ 
-	[O [\Cslot,tier=x[#1,tier=seg]]] 
-	[R	[N [\Vslot,tier=x[#2,tier=seg]] ] 
+	[O [\Cslot,tier=x[#2,tier=seg]]] 
+	[R 
+		[N,long 	[\Vslot,tier=x,phantom [#3,tier=seg,name=V]]] 
+		[C [\Cslot,tier=x[#5,tier=seg]]]
+	]
+]
+\@longV
+\end{forest}
+}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O [\Cslot,tier=x[#2,tier=seg]]] 
+	[R 
+		[N 	[\Vslot,tier=x[#3,tier=seg]]
+			[\Vslot,tier=x[#4,tier=seg]]] 
+		[C [\Cslot,tier=x[#5,tier=seg]]]
+	]
+]
+\end{forest}
+}
+}
+
+\newcommand{\CCV}[4][]{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+	] 
+	[R [N [\Vslot,tier=x[#4,tier=seg]]]]
+]
+\end{forest}
+}
+
+
+\newcommand{\CCVV}[5][]{%
+\ifstrequal{#4}{#5}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+	] 
+	[R [N,long [\Vslot,tier=x,phantom[#4,tier=seg,name=V]]]]
+]
+\@longV
+\end{forest}
+}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+	] 
+	[R [N 	[\Vslot,tier=x[#4,tier=seg]]
+			[\Vslot,tier=x[#5,tier=seg]]]]
+]
+\end{forest}
+}
+}
+
+
+\newcommand{\VCC}[4][]{%
+\begin{forest},ipa,#1
+[$\sigma$  
+	[R 	[N [\Vslot,tier=x[#2,tier=seg]]] 
 		[C	[\Cslot,tier=x[#3,tier=seg]] 
 			[\Cslot,tier=x[#4,tier=seg]]
 		]
@@ -149,55 +268,130 @@
 \end{forest}
 }
 
-\newcommand{\CCVCC}[5]{%
-\begin{forest},ipa
-[$\sigma$ 
-	[O	[\Cslot,tier=x[#1,tier=seg]]
-		[\Cslot,tier=x[#2,tier=seg]]
-	] 
-	[R	[N [\Vslot,tier=x[#3,tier=seg]] ] 
-		[C	[\Cslot,tier=x[#4,tier=seg]]
+\newcommand{\VVCC}[5][]{%
+\ifstrequal{#2}{#3}
+{%
+\begin{forest},ipa,#1
+[$\sigma$  
+	[R 	[N,long [\Vslot,tier=x,phantom[#2,tier=seg,name=V]]] 
+		[C	[\Cslot,tier=x[#4,tier=seg]] 
+			[\Cslot,tier=x[#5,tier=seg]]
+		]
+	]
+]
+\@longV
+\end{forest}
+}
+{%
+\begin{forest},ipa,#1
+[$\sigma$  
+	[R 	[N 	[\Vslot,tier=x[#2,tier=seg]]
+			[\Vslot,tier=x[#3,tier=seg]]] 
+		[C	[\Cslot,tier=x[#4,tier=seg]] 
 			[\Cslot,tier=x[#5,tier=seg]]
 		]
 	]
 ]
 \end{forest}
 }
-\newcommand{\CCCV}[4]{%
-\begin{forest},ipa
+}
+
+\newcommand{\CCVC}[5][]{%
+\begin{forest},ipa,#1
 [$\sigma$ 
-	[O	[\Cslot,tier=x[#1,tier=seg]] 
-		[\Cslot,tier=x[#2,tier=seg]]
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+	]
+	[R 
+		[N [\Vslot,tier=x[#4,tier=seg]]] 
+		[C [\Cslot,tier=x[#5,tier=seg]]]
+	]
+]
+\end{forest}
+}
+
+\newcommand{\CCVVC}[6][]{%
+\ifstrequal{#4}{#5}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+	]
+	[R 
+		[N,long [\Vslot,tier=x,phantom[#4,tier=seg,name=V]]] 
+		[C [\Cslot,tier=x[#6,tier=seg]]]
+	]
+]
+\@longV
+\end{forest}
+}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+	]
+	[R 
+		[N 	[\Vslot,tier=x[#4,tier=seg]]
+			[\Vslot,tier=x[#5,tier=seg]]] 
+		[C [\Cslot,tier=x[#6,tier=seg]]]
+	]
+]
+\end{forest}
+}}
+
+\newcommand{\CVCC}[5][]{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O [\Cslot,tier=x[#2,tier=seg]]] 
+	[R	[N 	[\Vslot,tier=x[#3,tier=seg]]
+		] 
+		[C	[\Cslot,tier=x[#4,tier=seg]] 
+			[\Cslot,tier=x[#5,tier=seg]]
+		]
+	]
+]
+\end{forest}
+}
+
+\newcommand{\CVVCC}[6][]{%
+\ifstrequal{#3}{#4}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O [\Cslot,tier=x[#2,tier=seg]]] 
+	[R	[N,long [\Vslot,tier=x,phantom[#3,tier=seg,name=V]] ] 
+		[C	[\Cslot,tier=x[#5,tier=seg]] 
+			[\Cslot,tier=x[#6,tier=seg]]
+		]
+	]
+]
+\@longV
+\end{forest}
+}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O [\Cslot,tier=x[#2,tier=seg]]] 
+	[R	[N 	[\Vslot,tier=x[#3,tier=seg]]
+			[\Vslot,tier=x[#4,tier=seg]] ] 
+		[C	[\Cslot,tier=x[#5,tier=seg]] 
+			[\Cslot,tier=x[#6,tier=seg]]
+		]
+	]
+]
+\end{forest}
+}
+}
+
+\newcommand{\CCVCC}[6][]{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#2,tier=seg]]
 		[\Cslot,tier=x[#3,tier=seg]]
 	] 
-	[R [N [\Vslot,tier=x[#4,tier=seg]]]]
-]
-\end{forest}
-}
-\newcommand{\CCCVC}[5]{%
-\begin{forest},ipa
-[$\sigma$ 
- 	[O	[\Cslot,tier=x[#1,tier=seg]] 
-		[\Cslot,tier=x[#2,tier=seg]]
-		[\Cslot,tier=x[#3,tier=seg]]
-	]
-	[R 
-		[N [\Vslot,tier=x[#4,tier=seg]]] 
-		[C	[\Cslot,tier=x[#5,tier=seg]]
-		]
-	]
-]
-\end{forest}
-}
-\newcommand{\CCCVCC}[6]{%
-\begin{forest},ipa
-[$\sigma$ 
- 	[O	[\Cslot,tier=x[#1,tier=seg]] 
-		[\Cslot,tier=x[#2,tier=seg]]
-		[\Cslot,tier=x[#3,tier=seg]]
-	]
-	[R 
-		[N [\Vslot,tier=x[#4,tier=seg]]] 
+	[R	[N [\Vslot,tier=x[#4,tier=seg]] ] 
 		[C	[\Cslot,tier=x[#5,tier=seg]]
 			[\Cslot,tier=x[#6,tier=seg]]
 		]
@@ -205,23 +399,246 @@
 ]
 \end{forest}
 }
-\newcommand{\CCCVCCC}[7]{%
-\begin{forest},ipa
+
+\newcommand{\CCVVCC}[7][]{%
+\ifstrequal{#4}{#5}
+{%
+\begin{forest},ipa,#1
 [$\sigma$ 
- 	[O	[\Cslot,tier=x[#1,tier=seg]] 
-		[\Cslot,tier=x[#2,tier=seg]]
+	[O	[\Cslot,tier=x[#2,tier=seg]]
 		[\Cslot,tier=x[#3,tier=seg]]
+	] 
+	[R	[N,long [\Vslot,tier=x,phantom[#4,tier=seg,name=V]] ] 
+		[C	[\Cslot,tier=x[#6,tier=seg]]
+			[\Cslot,tier=x[#7,tier=seg]]
+		]
 	]
-	[R 
-		[N [\Vslot,tier=x[#4,tier=seg]]] 
-		[C	[\Cslot,tier=x[#5,tier=seg]]
-			[\Cslot,tier=x[#6,tier=seg]]
+]
+\@longV
+\end{forest}
+}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#2,tier=seg]]
+		[\Cslot,tier=x[#3,tier=seg]]
+	] 
+	[R	[N 	[\Vslot,tier=x[#4,tier=seg]]
+			[\Vslot,tier=x[#5,tier=seg]]
+		] 
+		[C	[\Cslot,tier=x[#6,tier=seg]]
 			[\Cslot,tier=x[#7,tier=seg]]
 		]
 	]
 ]
 \end{forest}
 }
+}
+
+\newcommand{\CCCV}[5][]{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	] 
+	[R [N [\Vslot,tier=x[#5,tier=seg]]]]
+]
+\end{forest}
+}
+
+\newcommand{\CCCVV}[6][]{%
+\ifstrequal{#5}{#6}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	] 
+	[R [N,long [\Vslot,tier=x,phantom[#5,tier=seg,name=V]]]]
+]
+\@longV
+\end{forest}
+}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	] 
+	[R [N 	[\Vslot,tier=x[#5,tier=seg]]
+			[\Vslot,tier=x[#6,tier=seg]]]]
+]
+\end{forest}
+}
+}
+
+\newcommand{\CCCVC}[6][]{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	]
+	[R 
+		[N [\Vslot,tier=x[#5,tier=seg]]] 
+		[C	[\Cslot,tier=x[#6,tier=seg]]
+		]
+	]
+]
+\end{forest}
+}
+
+\newcommand{\CCCVVC}[7][]{%
+\ifstrequal{#5}{#6}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	]
+	[R 
+		[N,long [\Vslot,tier=x,phantom[#5,tier=seg,name=V]]] 
+		[C	[\Cslot,tier=x[#7,tier=seg]]
+		]
+	]
+]
+\@longV
+\end{forest}
+}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	]
+	[R 
+		[N 	[\Vslot,tier=x[#5,tier=seg]]
+			[\Vslot,tier=x[#6,tier=seg]]] 
+		[C	[\Cslot,tier=x[#7,tier=seg]]
+		]
+	]
+]
+\end{forest}
+}
+}
+\newcommand{\CCCVCC}[7][]{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	]
+	[R 
+		[N [\Vslot,tier=x[#5,tier=seg]]] 
+		[C	[\Cslot,tier=x[#6,tier=seg]]
+			[\Cslot,tier=x[#7,tier=seg]]
+		]
+	]
+]
+\end{forest}
+}
+
+\newcommand{\CCCVVCC}[8][]{%
+\ifstrequal{#5}{#6}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	]
+	[R 
+		[N,long [\Vslot,tier=x,phantom[#5,tier=seg,name=V]]] 
+		[C	[\Cslot,tier=x[#7,tier=seg]]
+			[\Cslot,tier=x[#8,tier=seg]]
+		]
+	]
+]
+\@longV
+\end{forest}
+}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	]
+	[R 
+		[N 	[\Vslot,tier=x[#5,tier=seg]]
+			[\Vslot,tier=x[#6,tier=seg]]] 
+		[C	[\Cslot,tier=x[#7,tier=seg]]
+			[\Cslot,tier=x[#8,tier=seg]]
+		]
+	]
+]
+\end{forest}
+}
+}
+
+\newcommand{\CCCVCCC}[8][]{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	]
+	[R 
+		[N [\Vslot,tier=x[#5,tier=seg]]] 
+		[C	[\Cslot,tier=x[#6,tier=seg]]
+			[\Cslot,tier=x[#7,tier=seg]]
+			[\Cslot,tier=x[#8,tier=seg]]
+		]
+	]
+]
+\end{forest}
+}
+
+\newcommand{\CCCVVCCC}[9][]{%
+\ifstrequal{#5}{#6}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	]
+	[R 
+		[N,long [\Vslot,tier=x,phantom[#5,tier=seg,name=V]]] 
+		[C	[\Cslot,tier=x[#7,tier=seg]]
+			[\Cslot,tier=x[#8,tier=seg]]
+			[\Cslot,tier=x[#9,tier=seg]]
+		]
+	]
+]
+\@longV
+\end{forest}
+}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	]
+	[R 
+		[N 	[\Vslot,tier=x[#5,tier=seg]]
+			[\Vslot,tier=x[#6,tier=seg]]] 
+		[C	[\Cslot,tier=x[#7,tier=seg]]
+			[\Cslot,tier=x[#8,tier=seg]]
+			[\Cslot,tier=x[#9,tier=seg]]
+		]
+	]
+]
+\end{forest}
+}
+}
+
 
 
 \endinput

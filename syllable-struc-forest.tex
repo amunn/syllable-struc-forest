@@ -2,8 +2,8 @@
 
 \documentclass[11pt]{article}
 \usepackage{syllable-struc-forest}
-\def\syllableversion{1.0}
-\def\syllabledate{2018/09/13}
+\def\syllableversion{1.1}
+\def\syllabledate{2018/09/15}
 \title{\textbf{Using the  syllable-struc-forest package}}
 \author{\textbf{Alan Munn}\\Department of Linguistics and Languages\\\texttt{\href{mailto:amunn@msu.edu}{amunn@msu.edu}}}
 \date{Version \syllableversion\\\syllabledate}
@@ -16,7 +16,7 @@
 \usepackage[sf]{titlesec}
 \usepackage[colorlinks=true]{hyperref}
 \usepackage{capt-of}
-
+\usepackage{gb4e}
 
 
 \DefineShortVerb{\|}
@@ -72,7 +72,7 @@
 \section{Package options}The package has one option: |[xslot]| which displays timing units as $\times$. If this option is not specified, segments are dominated simply by C or V as appropriate.
 \section{Package commands}
 \subsection{Syllable commands}
-The package provides commands for the  range of syllables shown in Table~\ref{syllables}:  The commands are straightforward: each macro consists simply of the CV specification of the syllable, and takes as many arguments as slots in that syllables.
+The package provides commands for the  range of syllables shown in Table~\ref{syllables}:  The commands are straightforward: each macro consists simply of the CV specification of the syllable, and takes as many arguments as slots in that syllables.  Each macro takes an optional argument to pass extra \pkg{forest} options if necessary. For most uses this will not be needed.
 
 \begin{center}
 \captionof{table}{Package syllable commands}\label{syllables}
@@ -97,27 +97,206 @@ The package provides commands for the  range of syllables shown in Table~\ref{sy
 \bottomrule
 \end{tabular}
 \end{center}
+\section{Long vowels}
+All of the macros listed in Table~{syllables} also have versions in which the V slot is doubled. If the two vowels provided as arguments are the same, then the single vowel will be doubly linked to two V slots. These macros therefore have one more argument each). For example: |\CVVC{b}{a}{a}{b}| will yield a doubly linked \emph{a} vowel, as in (\ref{long}a)  while |\CVVC{b}{a}{i}{b}| will link each vowel to its own slot as in (\ref{long}b):
+
+\begin{multicols}{2}
+\begin{exe}
+\ex\label{long}
+\begin{xlist}
+\ex \CVVC[baseline]{b}{a}{a}{b}
+\ex \CVVC[baseline]{b}{a}{i}{b}
+\end{xlist}
+\end{exe}
+\end{multicols}
+
 \section{IPA Fonts}
 When used with pdfLaTeX, the \pkg{tipa} package is automatically loaded, and segments are rendered in TIPA automatically.
 
 When used with XeLaTeX or LuaLaTeX, Linux Libertine O is loaded as the default IPA font. If you are using another font for your IPA symbols, define the font using \pkg{fontspec}.  For example if you are using Doulos IPA as your IPA font, you would use  |\newfontfamily\myipafont{Doulos SIL}|) and then use the following command to set the font used in the syllables: |\setIPAfont{\myipafont}|.
 
+
 \section{Examples}
+\begin{multicols}{3}
+|\V{a}|
+
 \V{a}
+
+|\VV{a}{a}|
+
+\VV{a}{a}
+
+|\VV{a}{i}|
+
+\VV{a}{i}
+\end{multicols}
+\begin{multicols}{3}
+|\CV{b}{a}|
+
 \CV{b}{a}
+
+|\CVV{b}{a}{a}|
+
+\CVV{b}{a}{a}
+
+|\CVV{b}{a}{i}|
+
+\CVV{b}{a}{i}
+
+\end{multicols}
+\clearpage
+\begin{multicols}{3}
+|\VC{a}{b}|
+
 \VC{a}{b}
+
+|\VVC{a}{a}{b}|
+
+\VVC{a}{a}{b}
+
+|\VVC{a}{i}{b}|
+
+\VVC{a}{i}{b}
+\end{multicols}
+\begin{multicols}{3}
+|\CVC{k}{a}{v}|
+
 \CVC{k}{a}{v}
+
+|\CVVC{k}{a}{a}{b}|
+
+\CVVC{k}{a}{a}{b}
+
+|\CVVC{k}{a}{i}{b}|
+
+\CVVC{k}{a}{i}{b}
+\end{multicols}
+
+\begin{multicols}{3}
+|\CCV{s}{t}{a}|
+
 \CCV{s}{t}{a}
+
+|\CCVV{s}{t}{a}{a}|
+
+\CCVV{s}{t}{a}{a}
+
+|\CCVV{s}{t}{a}{i}|
+
+\CCVV{s}{t}{a}{i}
+\end{multicols}
+\clearpage
+\begin{multicols}{3}
+|\VCC{a}{l}{p}|
+
 \VCC{a}{l}{p}
+
+|\VVCC{a}{a}{l}{p}|
+
+\VVCC{a}{a}{l}{p}
+
+|\VVCC{a}{i}{l}{p}|
+
+\VVCC{a}{i}{l}{p}
+\end{multicols}
+\begin{multicols}{3}
+|\CCVC{s}{t}{a}{l}|
+
 \CCVC{s}{t}{a}{l}
+
+|\CCVVC{s}{t}{a}{a}{l}|
+
+\CCVVC{s}{t}{a}{a}{l}
+
+|\CCVVC{s}{t}{a}{i}{l}|
+
+\CCVVC{s}{t}{a}{i}{l}
+\end{multicols}
+\begin{multicols}{3}
+|\CVCC{s}{a}{l}{t}|
+
 \CVCC{s}{a}{l}{t}
+
+|\CVVCC{s}{a}{a}{l}{t}|
+
+\CVVCC{s}{a}{a}{l}{t}
+
+|\CVVCC{s}{a}{i}{l}{t}|
+
+\CVVCC{s}{a}{i}{l}{t}
+\end{multicols}
+\clearpage
+\begin{multicols}{3}
+|\CCVCC{s}{l}{a}{r}{p}|
+
 \CCVCC{s}{l}{a}{r}{p}
+
+|\CCVVCC{s}{l}{a}{a}{r}{p}|
+
+\CCVVCC{s}{l}{a}{a}{r}{p}
+
+|\CCVVCC{s}{l}{a}{i}{r}{p}|
+
+\CCVVCC{s}{l}{a}{i}{r}{p}
+\end{multicols}
+\begin{multicols}{3}
+|\CCCV{s}{t}{r}{i}|
+
 \CCCV{s}{t}{r}{i}
+
+|\CCCVV{s}{t}{r}{a}{a}|
+
+\CCCVV{s}{t}{r}{a}{a}
+
+|\CCCVV{s}{t}{r}{a}{i}|
+
+\CCCVV{s}{t}{r}{a}{i}
+\end{multicols}
+\begin{multicols}{3}
+
+|\CCCVC{s}{t}{r}{i}{k}|
+
 \CCCVC{s}{t}{r}{i}{k}
 
+|\CCCVVC{s}{t}{r}{a}{a}{k}|
+
+\CCCVVC{s}{t}{r}{a}{a}{k}
+
+|\CCCVVC{s}{t}{r}{a}{i}{k}|
+
+\CCCVVC{s}{t}{r}{a}{i}{k}
+\end{multicols}
+\begin{multicols}{2}
+|\CCCVCC{s}{t}{r}{i}{l}{k}|
+
 \CCCVCC{s}{t}{r}{i}{l}{k}
+
+|\CCCVVCC{s}{t}{r}{a}{a}{l}{k}|
+
+\CCCVVCC{s}{t}{r}{a}{a}{l}{k}
+\end{multicols}
+\clearpage
+\begin{multicols}{2}
+|\CCCVVCC{s}{t}{r}{a}{i}{l}{k}|
+
+\CCCVVCC{s}{t}{r}{a}{i}{l}{k}
+
+|\CCCVCCC{s}{t}{r}{i}{l}{k}{s}|
+
 \CCCVCCC{s}{t}{r}{i}{l}{k}{s}
+\end{multicols}
+\begin{multicols}{2}
+
+|\CCCVVCCC{s}{t}{r}{a}{a}{l}{k}{s}|
+
+\CCCVVCCC{s}{t}{r}{a}{a}{l}{k}{s}
+
+|\CCCVVCCC{s}{t}{r}{a}{i}{l}{k}{s}|
+
+\CCCVVCCC{s}{t}{r}{a}{i}{l}{k}{s}
+\end{multicols}
+
 \section{Limitations}
-The package currently has no way of representing more than one vowel slot, and therefore cannot represent vowel length with two timing slots. Similarly it is not designed to represent, e.g. geminate consonants with a shared segment linked to two slots.  This would require much more work than I have time and interest for.
+The package currently does not represent geminate consonants with a shared segment linked to two slots.  This would require more work than I have time and interest for.
 
 \end{document}
