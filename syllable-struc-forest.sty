@@ -22,9 +22,12 @@
 % Version 1.0 2018/09/13 	Initial release
 % Version 1.1 2018/09/15 	Provided support for long vowels;
 %							Added optional argument for forest options
+% Version 1.1b 2018/09/16	Changed \Vslot \CSlot definitions to be 
+%							switchable within a document
 %
-\def\@syllableversion{1.1}
-\ProvidesPackage{syllable-struc-forest}[2018/09/13 Pre-built syllables using forest v\@syllableversion]
+\def\@syllableversion{1.1b}
+\def\@syllabledate{2018/09/16}
+\ProvidesPackage{syllable-struc-forest}[\@syllabledate\ Pre-built syllables using forest v\@syllableversion]
 \RequirePackage{forest}
 \useforestlibrary{linguistics}
 \RequirePackage{ifxetex,ifluatex}
@@ -56,8 +59,8 @@
 \DeclareOption{xslot}{\xslottrue}
 \ProcessOptions
 
-\ifxslot\newcommand{\Cslot}{$\times$}\newcommand{\Vslot}{$\times$}\else%
-\newcommand{\Cslot}{C}\newcommand{\Vslot}{V}\fi
+\newcommand\Cslot{\ifxslot$\times$\else C\fi}
+\newcommand\Vslot{\ifxslot$\times$\else V\fi}
 \newlength{\longVlen}
 \setlength{\longVlen}{-5pt}
 \forestset{%
@@ -72,8 +75,8 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 	\draw (V.north) -- (X2.south);}
 
 \newcommand{\V}[2][]{%
-\begin{forest}
-[$\sigma$,ipa,#1
+\begin{forest},ipa,#1
+[$\sigma$
  	[R [N [\Vslot,tier=x[#2,tier=seg]]]]
 ]
 \end{forest}
@@ -82,8 +85,8 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 \newcommand{\VV}[3][]{%
 \ifstrequal{#2}{#3}
 {%
-\begin{forest}
-[$\sigma$,ipa,#1
+\begin{forest},ipa,#1
+[$\sigma$
  	[R	[N, long 
 			[\Vslot,phantom,tier=x[#2,tier=seg,name=V]]
 		]
@@ -93,8 +96,8 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 \end{forest}
 }
 {%
-\begin{forest}
-[$\sigma$,ipa,#1
+\begin{forest},ipa,#1
+[$\sigma$
  	[R	[N 
 			[\Vslot,tier=x[#2,tier=seg]]
 			[\Vslot,tier=x[#3,tier=seg]]
@@ -106,8 +109,8 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 }
 
 \newcommand{\CV}[3][]{%
-\begin{forest},ipa
-[$\sigma$ 
+\begin{forest},ipa,#1
+[$\sigma$
 	[O [\Cslot,tier=x[#2,tier=seg]]] 
 	[R [N [\Vslot,tier=x[#3,tier=seg]]]]
 ]
@@ -638,7 +641,4 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 \end{forest}
 }
 }
-
-
-
 \endinput
