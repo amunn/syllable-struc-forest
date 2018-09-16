@@ -8,15 +8,17 @@
 \author{\textbf{Alan Munn}\\Department of Linguistics and Languages\\\texttt{\href{mailto:amunn@msu.edu}{amunn@msu.edu}}}
 \date{Version \syllableversion\\\syllabledate}
 \usepackage[T1]{fontenc}
+\usepackage{parskip}
 \usepackage[lmargin=.75in,rmargin=.75in,tmargin=1in,bmargin=1in]{geometry}
 \usepackage{titling}
-\usepackage{array, booktabs, multicol, fancyhdr, xspace,tabularx}
+\usepackage{array, booktabs, multicol, fancyhdr,xspace}
 \usepackage{enumitem}
 \usepackage{fancyvrb,listings,url}
 \usepackage[sf]{titlesec}
 \usepackage[colorlinks=true]{hyperref}
 \usepackage{capt-of}
 \usepackage{gb4e}
+
 
 
 \DefineShortVerb{\|}
@@ -68,8 +70,9 @@
 \maketitle
 \thispagestyle{empty}
 \renewcommand{\abstractname}{\sffamily Abstract}
-\abstract{\noindent\begin{quote} This is a package that allows you to draw syllable trees quickly with a simple input.\end{quote}
+\begin{abstract}\noindent\begin{quote} This is a package that allows you to draw syllable trees quickly with a simple input.\end{quote}
 \section{Package options}The package has one option: |[xslot]| which displays timing units as $\times$. If this option is not specified, segments are dominated simply by C or V as appropriate.
+\end{abstract}
 \section{Package commands}
 \subsection{Syllable commands}
 The package provides commands for the  range of syllables shown in Table~\ref{syllables}:  The commands are straightforward: each macro consists simply of the CV specification of the syllable, and takes as many arguments as slots in that syllables.  Each macro takes an optional argument to pass extra \pkg{forest} options if necessary. For most uses this will not be needed.
@@ -98,7 +101,7 @@ The package provides commands for the  range of syllables shown in Table~\ref{sy
 \end{tabular}
 \end{center}
 \section{Long vowels}
-All of the macros listed in Table~{syllables} also have versions in which the V slot is doubled. If the two vowels provided as arguments are the same, then the single vowel will be doubly linked to two V slots. These macros therefore have one more argument each). For example: |\CVVC{b}{a}{a}{b}| will yield a doubly linked \emph{a} vowel, as in (\ref{long}a)  while |\CVVC{b}{a}{i}{b}| will link each vowel to its own slot as in (\ref{long}b):
+All of the macros listed in Table~{\ref{syllables}} also have versions in which the V slot is doubled. If the two vowels provided as arguments are the same, then the single vowel will be doubly linked to two V slots. These macros therefore have one more argument each). For example: |\CVVC{b}{a}{a}{b}| will yield a doubly linked \emph{a} vowel, as in (\ref{long}a)  while |\CVVC{b}{a}{i}{b}| will link each vowel to its own slot as in (\ref{long}b):
 
 \begin{multicols}{2}
 \begin{exe}
@@ -109,6 +112,8 @@ All of the macros listed in Table~{syllables} also have versions in which the V 
 \end{xlist}
 \end{exe}
 \end{multicols}
+
+The width of the double linking is controlled by the length |\longVlen|. This is set  initially to |-5pt|.
 
 \section{IPA Fonts}
 When used with pdfLaTeX, the \pkg{tipa} package is automatically loaded, and segments are rendered in TIPA automatically.
@@ -130,6 +135,7 @@ When used with XeLaTeX or LuaLaTeX, Linux Libertine O is loaded as the default I
 
 \VV{a}{i}
 \end{multicols}
+\clearpage
 \begin{multicols}{3}
 |\CV{b}{a}|
 
@@ -144,7 +150,6 @@ When used with XeLaTeX or LuaLaTeX, Linux Libertine O is loaded as the default I
 \CVV{b}{a}{i}
 
 \end{multicols}
-\clearpage
 \begin{multicols}{3}
 |\VC{a}{b}|
 
@@ -171,7 +176,7 @@ When used with XeLaTeX or LuaLaTeX, Linux Libertine O is loaded as the default I
 
 \CVVC{k}{a}{i}{b}
 \end{multicols}
-
+\clearpage
 \begin{multicols}{3}
 |\CCV{s}{t}{a}|
 
@@ -185,7 +190,6 @@ When used with XeLaTeX or LuaLaTeX, Linux Libertine O is loaded as the default I
 
 \CCVV{s}{t}{a}{i}
 \end{multicols}
-\clearpage
 \begin{multicols}{3}
 |\VCC{a}{l}{p}|
 
@@ -212,6 +216,7 @@ When used with XeLaTeX or LuaLaTeX, Linux Libertine O is loaded as the default I
 
 \CCVVC{s}{t}{a}{i}{l}
 \end{multicols}
+\clearpage
 \begin{multicols}{3}
 |\CVCC{s}{a}{l}{t}|
 
@@ -225,7 +230,6 @@ When used with XeLaTeX or LuaLaTeX, Linux Libertine O is loaded as the default I
 
 \CVVCC{s}{a}{i}{l}{t}
 \end{multicols}
-\clearpage
 \begin{multicols}{3}
 |\CCVCC{s}{l}{a}{r}{p}|
 
@@ -252,6 +256,7 @@ When used with XeLaTeX or LuaLaTeX, Linux Libertine O is loaded as the default I
 
 \CCCVV{s}{t}{r}{a}{i}
 \end{multicols}
+\clearpage
 \begin{multicols}{3}
 
 |\CCCVC{s}{t}{r}{i}{k}|
@@ -275,7 +280,6 @@ When used with XeLaTeX or LuaLaTeX, Linux Libertine O is loaded as the default I
 
 \CCCVVCC{s}{t}{r}{a}{a}{l}{k}
 \end{multicols}
-\clearpage
 \begin{multicols}{2}
 |\CCCVVCC{s}{t}{r}{a}{i}{l}{k}|
 
@@ -285,6 +289,7 @@ When used with XeLaTeX or LuaLaTeX, Linux Libertine O is loaded as the default I
 
 \CCCVCCC{s}{t}{r}{i}{l}{k}{s}
 \end{multicols}
+\clearpage
 \begin{multicols}{2}
 
 |\CCCVVCCC{s}{t}{r}{a}{a}{l}{k}{s}|
