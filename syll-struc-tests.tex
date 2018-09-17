@@ -1,52 +1,73 @@
 \documentclass{article}
+\usepackage[margin=.5in]{geometry}
 \usepackage[xslot]{syllable-struc-forest}
-%\usepackage{fontspec}
 \newfontfamily\ipafont[Scale=MatchLowercase,Color=red]{Linux Libertine O}
 \setIPAfont{\ipafont}
-%\newfontfamily\junicode[Ligatures=Common]{Junicode}
-%\def\useTIPAfont{\ipafont}
-%\newenvironment{ipa}{%
-%\ipafont}{\normalfont}
-%\DeclareTextFontCommand{\textipa}{\ipafont}
-%\DeclareTextFontCommand{\textIPA}{\ipafont}
-%\usepackage{tipa}
+\parindent=0pt
+\pagestyle{empty}
 \begin{document}
 \V{a}
-\VV{a}{a}
-\VV{a}{i}
-\CVV{b}{a}{a}
-\CVV{b}{a}{i}
-\VC{ɜ}{b}
-\VVC{a}{a}{b}
-\VVC{a}{i}{b}
-\CVC{k}{ɞ}{v}
-\CVVC{k}{a}{a}{b}
-\CVVC{k}{a}{i}{b}
-\CCV{s}{t}{a}
-\CCVV{s}{t}{a}{a}
-\CCVV{s}{t}{a}{i}
-\VCC{ɤ}{l}{p}
-\VVCC{a}{a}{l}{p}
-\VVCC{a}{i}{l}{p}
-\CCVC{s}{t}{ʌ}{l}
-\CCVVC{s}{t}{a}{a}{l}
-\CCVVC{s}{t}{a}{i}{l}
-\CVCC{s}{a}{l}{t}
-\CVVCC{s}{a}{a}{l}{t}
-\CVVCC{s}{a}{i}{l}{t}
-\CCVCC{s}{l}{a}{r}{p}
-\CCVVCC{s}{l}{a}{a}{r}{p}
-\CCVVCC{s}{l}{a}{i}{r}{p}
+\VV{a}{a} % long V
+\VV{a}{i} % distinct V
+\CVV{b}{a}{a} % long V
+\CVV{b}{a}{i} % distinct V
+\VC{a}{b}
+\VVC{a}{a}{b} % long V
+\VVC{a}{i}{b} % distinct V
+\CVC{b}{a}{b} 
+\CVVC{k}{a}{a}{b} % long V
+\CVVC{k}{a}{i}{b} % distinct V
+\CCV{s}{t}{a} % distinct C
+\CCV{s}{s}{a} % long C
+\CCVV{s}{t}{a}{a} % long V distinct C
+\CCVV{s}{s}{a}{a} % long V long C
+\CCVV{s}{t}{a}{i} % distinct all
+\CCVV{s}{s}{a}{i} % long C distinct V
+\VCC{a}{l}{p} % distinct C
+\VCC{a}{l}{l} % long C
+\VVCC{a}{a}{l}{p} % long V distinct C
+\VVCC{a}{a}{l}{l} % long V long C
+\VVCC{a}{i}{l}{p} % distinct all
+\VVCC{a}{i}{l}{l} % distinct V long C
+\CCVC{s}{t}{i}{l} % distinct C
+\CCVC{s}{s}{i}{l} % long C
+\CCVVC{s}{t}{a}{a}{l} % distinct C long V
+\CCVVC{s}{t}{a}{i}{l} % distinct all
+\CCVVC{s}{s}{a}{a}{l} % long C long V
+\CCVVC{s}{s}{a}{i}{l} % long C distinct V
+\CVCC{s}{a}{l}{t} % distinct C
+\CVCC{s}{a}{l}{l} % long C
+\CVVCC{s}{a}{a}{l}{t} % long V distinct C
+\CVVCC{s}{a}{a}{l}{l} % long V long C
+\CVVCC{s}{a}{i}{l}{t} % distinct all
+
+\CVVCC{s}{a}{i}{l}{l} % distinct V long C
+\CCVCC{s}{l}{a}{r}{p} % distinct all
+\CCVCC{s}{s}{a}{r}{p} % long onset
+\CCVCC{s}{l}{a}{p}{p} % long coda
+\CCVCC{s}{s}{a}{s}{p} % long all
+\CCVVCC{s}{l}{a}{a}{r}{p} % long V distinct onset/coda
+\CCVVCC{s}{s}{a}{a}{r}{p} % long V long onset distinct coda
+\CCVVCC{s}{s}{a}{a}{p}{p} % long all
+\CCVVCC{s}{l}{a}{i}{r}{p} % distinct all
+\CCVVCC{s}{s}{a}{i}{r}{p} % distinct V long onset
+\CCVVCC{s}{l}{a}{i}{p}{p} % distinct V long coda
 \CCCV{s}{t}{r}{i}
 \CCCVV{s}{t}{r}{a}{a}
 \CCCVV{s}{t}{r}{a}{i}
 \CCCVC{s}{t}{r}{i}{k}
 \CCCVVC{s}{t}{r}{a}{a}{k}
 \CCCVVC{s}{t}{r}{a}{i}{k}
-\CCCVCC{s}{t}{r}{i}{l}{k}
-\CCCVVCC{s}{t}{r}{a}{a}{l}{k}
-\CCCVVCC{s}{t}{r}{a}{i}{l}{k}
+\CCCVCC{s}{t}{r}{i}{l}{k} % distinct coda
+
+\CCCVCC{s}{t}{r}{i}{l}{l} % long coda
+\CCCVVCC{s}{t}{r}{a}{a}{l}{k} % long V distinct coda
+\CCCVVCC{s}{t}{r}{a}{a}{l}{l} % long V long coda
+
+\CCCVVCC{s}{t}{r}{a}{i}{l}{k} % distinct all
+\CCCVVCC{s}{t}{r}{a}{i}{l}{l} % distinct V long coda
 \CCCVCCC{s}{t}{r}{i}{l}{k}{s}
+
 \CCCVVCCC{s}{t}{r}{a}{a}{l}{k}{s}
 \CCCVVCCC{s}{t}{r}{a}{i}{l}{k}{s}
 \end{document}

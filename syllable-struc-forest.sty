@@ -25,7 +25,7 @@
 % Version 1.1b 2018/09/16	Changed \Vslot \CSlot definitions to be 
 %							switchable within a document
 %
-\def\@syllableversion{1.1b}
+\def\@syllableversion{1.2}
 \def\@syllabledate{2018/09/16}
 \ProvidesPackage{syllable-struc-forest}[\@syllabledate\ Pre-built syllables using forest v\@syllableversion]
 \RequirePackage{forest}
@@ -66,13 +66,25 @@
 \forestset{%
 ipa/.style={sn edges,
 	delay={where tier={seg}{content=\textsyll{##1}}{}}},
-long/.style={s sep=\longVlen,before typesetting nodes={
-	 prepend={[\Vslot,name=X1,tier=x,sn edges,]},
-	 append={[\Vslot,name=X2,tier=x,sn edges,]}}}
+longV/.style={s sep=\longVlen,before typesetting nodes={
+	 prepend={[\Vslot,name=V1,tier=x,sn edges,]},
+	 append={[\Vslot,name=V2,tier=x,sn edges,]}}},
+longC/.style={s sep=\longVlen,before typesetting nodes={
+	 prepend={[\Cslot,name=C1,tier=x,sn edges,]},
+	 append={[\Cslot,name=C2,tier=x,sn edges,]}}},
+longCC/.style={s sep=\longVlen,before typesetting nodes={
+	 prepend={[\Cslot,name=CC1,tier=x,sn edges,]},
+	 append={[\Cslot,name=CC2,tier=x,sn edges,]}}}
 }
 \newcommand{\@longV}{%
-	\draw (V.north) -- (X1.south);
-	\draw (V.north) -- (X2.south);}
+	\draw (V.north) -- (V1.south);
+	\draw (V.north) -- (V2.south);}
+\newcommand{\@longC}{%
+	\draw (C.north) -- (C1.south);
+	\draw (C.north) -- (C2.south);}
+\newcommand{\@longCC}{%
+	\draw (CC.north) -- (CC1.south);
+	\draw (CC.north) -- (CC2.south);}
 
 \newcommand{\V}[2][]{%
 \begin{forest},ipa,#1
@@ -87,7 +99,7 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 {%
 \begin{forest},ipa,#1
 [$\sigma$
- 	[R	[N, long 
+ 	[R	[N,longV 
 			[\Vslot,phantom,tier=x[#2,tier=seg,name=V]]
 		]
 	]
@@ -122,7 +134,7 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 \begin{forest},ipa,#1
 [$\sigma$ 
 	[O [\Cslot,tier=x[#2,tier=seg]]] 
-	[R	[N, long 
+	[R	[N, longV
 			[\Vslot,phantom,tier=x[#3,tier=seg,name=V]]
 		]
 	]
@@ -160,7 +172,7 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 \begin{forest},ipa,#1
 [$\sigma$  
 	[R 
-		[N, long [\Vslot,phantom,tier=x[#2,tier=seg,name=V]]]
+		[N, longV[\Vslot,phantom,tier=x[#2,tier=seg,name=V]]]
 		[C [\Cslot,tier=x[#4,tier=seg]]]
 	]
 ]
@@ -199,7 +211,7 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 [$\sigma$ 
 	[O [\Cslot,tier=x[#2,tier=seg]]] 
 	[R 
-		[N,long 	[\Vslot,tier=x,phantom [#3,tier=seg,name=V]]] 
+		[N,longV	[\Vslot,tier=x,phantom [#3,tier=seg,name=V]]] 
 		[C [\Cslot,tier=x[#5,tier=seg]]]
 	]
 ]
@@ -221,6 +233,18 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 }
 
 \newcommand{\CCV}[4][]{%
+\ifstrequal{#2}{#3}
+{%
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O,longC [\Cslot,tier=x,phantom[#2,tier=seg,name=C]] 
+	] 
+	[R [N [\Vslot,tier=x[#4,tier=seg]]]]
+]
+\@longC
+\end{forest}
+}
+{%
 \begin{forest},ipa,#1
 [$\sigma$ 
 	[O	[\Cslot,tier=x[#2,tier=seg]] 
@@ -230,19 +254,46 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 ]
 \end{forest}
 }
-
+}
 
 \newcommand{\CCVV}[5][]{%
 \ifstrequal{#4}{#5}
-{%
+{% long V
+\ifstrequal{#2}{#3}
+{% long V; long C
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O,longC	[\Cslot,tier=x,phantom [#2,tier=seg,name=C]] 
+	] 
+	[R [N,longV [\Vslot,tier=x,phantom[#4,tier=seg,name=V]]]]
+]
+\@longV
+\@longC
+\end{forest}
+}
+{% long V; 
 \begin{forest},ipa,#1
 [$\sigma$ 
 	[O	[\Cslot,tier=x[#2,tier=seg]] 
 		[\Cslot,tier=x[#3,tier=seg]]
 	] 
-	[R [N,long [\Vslot,tier=x,phantom[#4,tier=seg,name=V]]]]
+	[R [N,longV[\Vslot,tier=x,phantom[#4,tier=seg,name=V]]]]
 ]
 \@longV
+\end{forest}
+}
+}
+{% distinct V
+\ifstrequal{#2}{#3}
+{% long C
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O,longC [\Cslot,tier=x,phantom [#2,tier=seg,name=C]] 
+	] 
+	[R [N 	[\Vslot,tier=x[#4,tier=seg]]
+			[\Vslot,tier=x[#5,tier=seg]]]]
+]
+\@longC
 \end{forest}
 }
 {%
@@ -257,9 +308,23 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 \end{forest}
 }
 }
+}
 
 
 \newcommand{\VCC}[4][]{%
+\ifstrequal{#3}{#4}
+{% long C
+\begin{forest},ipa,#1
+[$\sigma$  
+	[R 	[N [\Vslot,tier=x[#2,tier=seg]]] 
+		[C,longCC	[\Cslot,tier=x,phantom[#3,tier=seg,name=CC]] 
+		]
+	]
+]
+\@longCC
+\end{forest}
+}
+{%
 \begin{forest},ipa,#1
 [$\sigma$  
 	[R 	[N [\Vslot,tier=x[#2,tier=seg]]] 
@@ -270,19 +335,50 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 ]
 \end{forest}
 }
+}
+
 
 \newcommand{\VVCC}[5][]{%
 \ifstrequal{#2}{#3}
-{%
+{% long V
+\ifstrequal{#4}{#5}
+{% long V long C
 \begin{forest},ipa,#1
 [$\sigma$  
-	[R 	[N,long [\Vslot,tier=x,phantom[#2,tier=seg,name=V]]] 
+	[R 	[N,longV[\Vslot,tier=x,phantom[#2,tier=seg,name=V]]] 
+		[C,longCC	[\Cslot,tier=x,phantom[#4,tier=seg,name=CC]] 
+		]
+	]
+]
+\@longV
+\@longCC
+\end{forest}
+}
+{% long V distinct C
+\begin{forest},ipa,#1
+[$\sigma$  
+	[R 	[N,longV[\Vslot,tier=x,phantom[#2,tier=seg,name=V]]] 
 		[C	[\Cslot,tier=x[#4,tier=seg]] 
 			[\Cslot,tier=x[#5,tier=seg]]
 		]
 	]
 ]
 \@longV
+\end{forest}
+}
+}
+{% distinct V
+\ifstrequal{#4}{#5}
+{% long C
+\begin{forest},ipa,#1
+[$\sigma$  
+	[R 	[N 	[\Vslot,tier=x[#2,tier=seg]]
+			[\Vslot,tier=x[#3,tier=seg]]] 
+		[C,longCC	[\Cslot,tier=x,phantom[#4,tier=seg,name=CC]] 
+		]
+	]
+]
+\@longCC
 \end{forest}
 }
 {%
@@ -297,9 +393,24 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 ]
 \end{forest}
 }
-}
+}}
 
 \newcommand{\CCVC}[5][]{%
+\ifstrequal{#2}{#3}
+{% long C
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O,longC	[\Cslot,tier=x,phantom[#2,tier=seg,name=C]] 
+	]
+	[R 
+		[N [\Vslot,tier=x[#4,tier=seg]]] 
+		[C [\Cslot,tier=x[#5,tier=seg]]]
+	]
+]
+\@longC
+\end{forest}
+}
+{%
 \begin{forest},ipa,#1
 [$\sigma$ 
  	[O	[\Cslot,tier=x[#2,tier=seg]] 
@@ -312,24 +423,58 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 ]
 \end{forest}
 }
+}
 
 \newcommand{\CCVVC}[6][]{%
 \ifstrequal{#4}{#5}
-{%
+{% long V
+\ifstrequal{#2}{#3}
+{% long V long C
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O,longC	[\Cslot,tier=x,phantom[#2,tier=seg,name=C]] 
+	]
+	[R 
+		[N,longV[\Vslot,tier=x,phantom[#4,tier=seg,name=V]]] 
+		[C [\Cslot,tier=x[#6,tier=seg]]]
+	]
+]
+\@longV
+\@longC
+\end{forest}
+}
+{% long V; distinct C
 \begin{forest},ipa,#1
 [$\sigma$ 
  	[O	[\Cslot,tier=x[#2,tier=seg]] 
 		[\Cslot,tier=x[#3,tier=seg]]
 	]
 	[R 
-		[N,long [\Vslot,tier=x,phantom[#4,tier=seg,name=V]]] 
+		[N,longV[\Vslot,tier=x,phantom[#4,tier=seg,name=V]]] 
 		[C [\Cslot,tier=x[#6,tier=seg]]]
 	]
 ]
 \@longV
 \end{forest}
 }
-{%
+}
+{% distinct V
+\ifstrequal{#2}{#3}
+{% distinct V; long C
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O,longC	[\Cslot,tier=x,phantom[#2,tier=seg,name=C]] 
+	]
+	[R 
+		[N 	[\Vslot,tier=x[#4,tier=seg]]
+			[\Vslot,tier=x[#5,tier=seg]]] 
+		[C [\Cslot,tier=x[#6,tier=seg]]]
+	]
+]
+\@longC
+\end{forest}
+}
+{% distinct V; distinct C
 \begin{forest},ipa,#1
 [$\sigma$ 
  	[O	[\Cslot,tier=x[#2,tier=seg]] 
@@ -342,9 +487,26 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 	]
 ]
 \end{forest}
-}}
+}
+}
+}
 
 \newcommand{\CVCC}[5][]{%
+\ifstrequal{#4}{#5}
+{% long C
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O [\Cslot,tier=x[#2,tier=seg]]] 
+	[R	[N 	[\Vslot,tier=x[#3,tier=seg]]
+		] 
+		[C,longCC	[\Cslot,tier=x,phantom[#4,tier=seg,name=CC]] 
+		]
+	]
+]
+\@longCC
+\end{forest}
+}
+{%
 \begin{forest},ipa,#1
 [$\sigma$ 
 	[O [\Cslot,tier=x[#2,tier=seg]]] 
@@ -357,14 +519,30 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 ]
 \end{forest}
 }
+}
 
 \newcommand{\CVVCC}[6][]{%
 \ifstrequal{#3}{#4}
-{%
+{% long V
+\ifstrequal{#5}{#6}
+{% long V long C
 \begin{forest},ipa,#1
 [$\sigma$ 
 	[O [\Cslot,tier=x[#2,tier=seg]]] 
-	[R	[N,long [\Vslot,tier=x,phantom[#3,tier=seg,name=V]] ] 
+	[R	[N,longV[\Vslot,tier=x,phantom[#3,tier=seg,name=V]] ] 
+		[C,longCC	[\Cslot,tier=x,phantom[#5,tier=seg,name=CC]] 
+		]
+	]
+]
+\@longV
+\@longCC
+\end{forest}
+}
+{% long V distinct C
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O [\Cslot,tier=x[#2,tier=seg]]] 
+	[R	[N,longV[\Vslot,tier=x,phantom[#3,tier=seg,name=V]] ] 
 		[C	[\Cslot,tier=x[#5,tier=seg]] 
 			[\Cslot,tier=x[#6,tier=seg]]
 		]
@@ -373,7 +551,23 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 \@longV
 \end{forest}
 }
-{%
+}
+{% distinct V
+\ifstrequal{#5}{#6}
+{% distinct V; long C
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O [\Cslot,tier=x[#2,tier=seg]]] 
+	[R	[N 	[\Vslot,tier=x[#3,tier=seg]]
+			[\Vslot,tier=x[#4,tier=seg]] ] 
+		[C,longCC	[\Cslot,tier=x,phantom[#5,tier=seg,name=CC]] 
+		]
+	]
+]
+\@longCC
+\end{forest}
+}
+{% distinct V distinct C
 \begin{forest},ipa,#1
 [$\sigma$ 
 	[O [\Cslot,tier=x[#2,tier=seg]]] 
@@ -387,8 +581,57 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 \end{forest}
 }
 }
+}
 
 \newcommand{\CCVCC}[6][]{%
+\ifstrequal{#2}{#3}
+{% long onset
+\ifstrequal{#5}{#6}
+{% long onset; long coda
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O,longC	[\Cslot,tier=x,phantom[#2,tier=seg,name=C]]
+	] 
+	[R	[N [\Vslot,tier=x[#4,tier=seg]] ] 
+		[C,longCC	[\Cslot,tier=x,phantom[#5,tier=seg,name=CC]]
+		]
+	]
+]
+\@longC
+\@longCC
+\end{forest}
+}
+{% long onset; distinct coda
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O,longC	[\Cslot,tier=x,phantom[#2,tier=seg,name=C]]
+	] 
+	[R	[N [\Vslot,tier=x[#4,tier=seg]] ] 
+		[C	[\Cslot,tier=x[#5,tier=seg]]
+			[\Cslot,tier=x[#6,tier=seg]]
+		]
+	]
+]
+\@longC
+\end{forest}
+}}
+{%distinct onset
+\ifstrequal{#5}{#6}
+{% distinct onset; long coda
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#2,tier=seg]]
+		[\Cslot,tier=x[#3,tier=seg]]
+	] 
+	[R	[N [\Vslot,tier=x[#4,tier=seg]] ] 
+		[C,longCC	[\Cslot,tier=x,phantom[#5,tier=seg,name=CC]]
+		]
+	]
+]
+\@longCC
+\end{forest}
+}
+{% distinct onset; distinct coda
 \begin{forest},ipa,#1
 [$\sigma$ 
 	[O	[\Cslot,tier=x[#2,tier=seg]]
@@ -402,16 +645,68 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 ]
 \end{forest}
 }
-
+}}
 \newcommand{\CCVVCC}[7][]{%
 \ifstrequal{#4}{#5}
-{%
+{% long V
+\ifstrequal{#2}{#3}
+{% long V long onset
+\ifstrequal{#6}{#7}
+{% long V long onset long coda
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O,longC	[\Cslot,tier=x,phantom[#2,tier=seg,name=C]]
+	] 
+	[R	[N,longV[\Vslot,tier=x,phantom[#4,tier=seg,name=V]] ] 
+		[C,longCC	[\Cslot,tier=x,phantom[#6,tier=seg,name=CC]]
+		]
+	]
+]
+\@longV
+\@longC
+\@longCC
+\end{forest}
+}
+{% long V long onset, distinct coda
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O,longC	[\Cslot,tier=x,phantom[#2,tier=seg,name=C]]
+	] 
+	[R	[N,longV[\Vslot,tier=x,phantom[#4,tier=seg,name=V]] ] 
+		[C	[\Cslot,tier=x[#6,tier=seg]]
+			[\Cslot,tier=x[#7,tier=seg]]
+		]
+	]
+]
+\@longV
+\@longC
+\end{forest}
+}
+}
+{% long V distinct onset
+\ifstrequal{#6}{#7}
+{% long V distinct onset long coda
 \begin{forest},ipa,#1
 [$\sigma$ 
 	[O	[\Cslot,tier=x[#2,tier=seg]]
 		[\Cslot,tier=x[#3,tier=seg]]
 	] 
-	[R	[N,long [\Vslot,tier=x,phantom[#4,tier=seg,name=V]] ] 
+	[R	[N,longV[\Vslot,tier=x,phantom[#4,tier=seg,name=V]] ] 
+		[C,longCC	[\Cslot,tier=x,phantom[#6,tier=seg,name=CC]]
+		]
+	]
+]
+\@longV
+\@longCC
+\end{forest}
+}
+{% long V distinct onset distinct coda
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#2,tier=seg]]
+		[\Cslot,tier=x[#3,tier=seg]]
+	] 
+	[R	[N,longV[\Vslot,tier=x,phantom[#4,tier=seg,name=V]] ] 
 		[C	[\Cslot,tier=x[#6,tier=seg]]
 			[\Cslot,tier=x[#7,tier=seg]]
 		]
@@ -420,7 +715,64 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 \@longV
 \end{forest}
 }
-{%
+}
+}
+{% distinct V
+\ifstrequal{#2}{#3}
+{% distinct V long onset
+\ifstrequal{#6}{#7}
+{% distinct V long onset long coda
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O,longC	[\Cslot,tier=x,phantom[#2,tier=seg,name=C]]
+	] 
+	[R	[N 	[\Vslot,tier=x[#4,tier=seg]]
+			[\Vslot,tier=x[#5,tier=seg]]
+		] 
+		[C,longCC	[\Cslot,tier=x,phantom[#6,tier=seg,name=CC]]
+		]
+	]
+]
+\@longC
+\@longCC
+\end{forest}
+}
+{% distinct V long onset distinct coda
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O,longC	[\Cslot,tier=x,phantom[#2,tier=seg,name=C]]
+	] 
+	[R	[N 	[\Vslot,tier=x[#4,tier=seg]]
+			[\Vslot,tier=x[#5,tier=seg]]
+		] 
+		[C	[\Cslot,tier=x[#6,tier=seg]]
+			[\Cslot,tier=x[#7,tier=seg]]
+		]
+	]
+]
+\@longC
+\end{forest}
+}
+}
+{% distinct V distinct onset
+\ifstrequal{#6}{#7}
+{% distinct V distinct onset long coda
+\begin{forest},ipa,#1
+[$\sigma$ 
+	[O	[\Cslot,tier=x[#2,tier=seg]]
+		[\Cslot,tier=x[#3,tier=seg]]
+	] 
+	[R	[N 	[\Vslot,tier=x[#4,tier=seg]]
+			[\Vslot,tier=x[#5,tier=seg]]
+		] 
+		[C,longCC	[\Cslot,tier=x,phantom[#6,tier=seg,name=CC]]
+		]
+	]
+]
+\@longCC
+\end{forest}
+}
+{% distinct V distinct onset distinct coda
 \begin{forest},ipa,#1
 [$\sigma$ 
 	[O	[\Cslot,tier=x[#2,tier=seg]]
@@ -435,6 +787,8 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 	]
 ]
 \end{forest}
+}
+}
 }
 }
 
@@ -459,7 +813,7 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 		[\Cslot,tier=x[#3,tier=seg]]
 		[\Cslot,tier=x[#4,tier=seg]]
 	] 
-	[R [N,long [\Vslot,tier=x,phantom[#5,tier=seg,name=V]]]]
+	[R [N,longV[\Vslot,tier=x,phantom[#5,tier=seg,name=V]]]]
 ]
 \@longV
 \end{forest}
@@ -504,7 +858,7 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 		[\Cslot,tier=x[#4,tier=seg]]
 	]
 	[R 
-		[N,long [\Vslot,tier=x,phantom[#5,tier=seg,name=V]]] 
+		[N,longV[\Vslot,tier=x,phantom[#5,tier=seg,name=V]]] 
 		[C	[\Cslot,tier=x[#7,tier=seg]]
 		]
 	]
@@ -530,6 +884,24 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 }
 }
 \newcommand{\CCCVCC}[7][]{%
+\ifstrequal{#6}{#7}
+{% long coda
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	]
+	[R 
+		[N [\Vslot,tier=x[#5,tier=seg]]] 
+		[C,longCC	[\Cslot,tier=x,phantom[#6,tier=seg,name=CC]]
+		]
+	]
+]
+\@longCC
+\end{forest}
+}
+{% distinct coda
 \begin{forest},ipa,#1
 [$\sigma$ 
  	[O	[\Cslot,tier=x[#2,tier=seg]] 
@@ -545,10 +917,13 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 ]
 \end{forest}
 }
+}
 
 \newcommand{\CCCVVCC}[8][]{%
 \ifstrequal{#5}{#6}
-{%
+{% long V
+\ifstrequal{#7}{#8}
+{% long V long coda
 \begin{forest},ipa,#1
 [$\sigma$ 
  	[O	[\Cslot,tier=x[#2,tier=seg]] 
@@ -556,7 +931,24 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 		[\Cslot,tier=x[#4,tier=seg]]
 	]
 	[R 
-		[N,long [\Vslot,tier=x,phantom[#5,tier=seg,name=V]]] 
+		[N,longV[\Vslot,tier=x,phantom[#5,tier=seg,name=V]]] 
+		[C,longCC	[\Cslot,tier=x,phantom[#7,tier=seg,name=CC]]
+		]
+	]
+]
+\@longV
+\@longCC
+\end{forest}
+}
+{% long V distinct coda
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	]
+	[R 
+		[N,longV[\Vslot,tier=x,phantom[#5,tier=seg,name=V]]] 
 		[C	[\Cslot,tier=x[#7,tier=seg]]
 			[\Cslot,tier=x[#8,tier=seg]]
 		]
@@ -565,7 +957,27 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 \@longV
 \end{forest}
 }
-{%
+}
+{% distinct V
+\ifstrequal{#7}{#8}
+{% distinct V long coda
+\begin{forest},ipa,#1
+[$\sigma$ 
+ 	[O	[\Cslot,tier=x[#2,tier=seg]] 
+		[\Cslot,tier=x[#3,tier=seg]]
+		[\Cslot,tier=x[#4,tier=seg]]
+	]
+	[R 
+		[N 	[\Vslot,tier=x[#5,tier=seg]]
+			[\Vslot,tier=x[#6,tier=seg]]] 
+		[C,longCC	[\Cslot,tier=x,phantom[#7,tier=seg,name=CC]]
+		]
+	]
+]
+\@longCC
+\end{forest}
+}
+{% distinct V distinct coda
 \begin{forest},ipa,#1
 [$\sigma$ 
  	[O	[\Cslot,tier=x[#2,tier=seg]] 
@@ -581,6 +993,7 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 	]
 ]
 \end{forest}
+}
 }
 }
 
@@ -612,7 +1025,7 @@ long/.style={s sep=\longVlen,before typesetting nodes={
 		[\Cslot,tier=x[#4,tier=seg]]
 	]
 	[R 
-		[N,long [\Vslot,tier=x,phantom[#5,tier=seg,name=V]]] 
+		[N,longV[\Vslot,tier=x,phantom[#5,tier=seg,name=V]]] 
 		[C	[\Cslot,tier=x[#7,tier=seg]]
 			[\Cslot,tier=x[#8,tier=seg]]
 			[\Cslot,tier=x[#9,tier=seg]]

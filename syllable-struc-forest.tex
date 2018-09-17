@@ -2,7 +2,7 @@
 
 \documentclass[11pt]{article}
 \usepackage{syllable-struc-forest}
-\def\syllableversion{1.1b}
+\def\syllableversion{1.2}
 \def\syllabledate{2018/09/16}
 \title{\textbf{Using the  syllable-struc-forest package}}
 \author{\textbf{Alan Munn}\\Department of Linguistics and Languages\\\texttt{\href{mailto:amunn@msu.edu}{amunn@msu.edu}}}
@@ -100,7 +100,7 @@ The package provides commands for the  range of syllables shown in Table~\ref{sy
 \bottomrule
 \end{tabular}
 \end{center}
-\section{Long vowels}
+\section{Long segments}
 All of the macros listed in Table~{\ref{syllables}} also have versions in which the V slot is doubled. If the two vowels provided as arguments are the same, then the single vowel will be doubly linked to two V slots. These macros therefore have one more argument each). For example: |\CVVC{b}{a}{a}{b}| will yield a doubly linked \emph{a} vowel, as in (\ref{long}a)  while |\CVVC{b}{a}{i}{b}| will link each vowel to its own slot as in (\ref{long}b):
 
 \begin{multicols}{2}
@@ -113,7 +113,9 @@ All of the macros listed in Table~{\ref{syllables}} also have versions in which 
 \end{exe}
 \end{multicols}
 
-The width of the double linking is controlled by the length |\longVlen|. This is set  initially to |-5pt|.
+The same is true for any CC cluster (onset or coda). If the consonant in the two slots is identical, they will be linked to a single consonant. (This does not apply to CC clusters that are part of CCC clusters.)
+
+The width of the double linking (for both vowels and consonants) is controlled by the length |\longVlen|. This is set  initially to |-5pt|.
 
 \section{IPA Fonts}
 When used with pdfLaTeX, the \pkg{tipa} package is automatically loaded, and segments are rendered in TIPA automatically.
@@ -322,7 +324,6 @@ When used with XeLaTeX or LuaLaTeX, Linux Libertine O is loaded as the default I
 \CCCVVCCC{s}{t}{r}{a}{i}{l}{k}{s}
 \end{multicols}
 
-\section{Limitations}
-The package currently does not represent geminate consonants with a shared segment linked to two slots.  This would require more work than I have time and interest for.
+
 
 \end{document}
